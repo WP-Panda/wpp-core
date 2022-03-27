@@ -7,7 +7,7 @@ wp-content/uploads
 
 
 # ignore these plugins
-wp-content/plugins/hello.php
+wp-content/plugins
 
 # ignore specific themes
 #wp-content/themes/twenty*/
