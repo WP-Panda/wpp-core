@@ -13,6 +13,7 @@
 if ( version_compare( $GLOBALS['wp_version'], '5.3', '<' ) ) {
 	require get_template_directory() . '/inc/back-compat.php';
 }
+require_once 'wpp-core/init.php';
 
 if ( ! function_exists( 'twenty_twenty_one_setup' ) ) {
 	/**
