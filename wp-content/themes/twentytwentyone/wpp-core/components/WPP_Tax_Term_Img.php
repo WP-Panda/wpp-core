@@ -175,7 +175,7 @@ class WPP_Tax_Term_Img {
 			if ( $thumbnail_id ) {
 				$image = wp_get_attachment_thumb_url( $thumbnail_id );
 			} else {
-				//$image = wc_placeholder_img_src();
+				$image = wpp_image_placeholder('','src');
 			}
 
 			$image   = str_replace( ' ', '%20', $image );
@@ -260,17 +260,15 @@ WPP_Tax_Term_Img::init();
 
 
 function wpp_term_img( $id ) {
-
 	$thumbnail_id = get_term_meta( $id, WPP_Tax_Term_Img::$field, true );
 
 	if ( $thumbnail_id ) {
 		$image = wp_get_attachment_thumb_url( $thumbnail_id );
 	} else {
-		$image = wc_placeholder_img_src();
+		$image = wpp_image_placeholder();
 	}
 
 	$image = str_replace( ' ', '%20', $image );
 
 	echo '<img src="' . esc_url( $image ) . '" alt="" />';
-
 }

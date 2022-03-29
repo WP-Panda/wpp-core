@@ -7,11 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-
 $array = [
-	'WPP_Tax_Term_Img',
-	'Wpp_Custom_Taxonomy',
-	'helpers/init'
+	'helpers-img',
 ];
 
 wpp_require( $array, __DIR__ );
