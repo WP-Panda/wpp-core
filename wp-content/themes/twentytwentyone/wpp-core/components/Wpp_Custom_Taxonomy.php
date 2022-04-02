@@ -17,7 +17,7 @@ if ( ! class_exists( 'Wpp_Custom_Taxonomy' ) ) :
 			add_action( 'wp_loaded', [ __CLASS__, 'unregister_post_types' ], 10 );
 
 			add_filter( 'post_updated_messages', [ __CLASS__, 'update_messages' ], 10 );
-			#	add_action( 'contextual_help', [ __CLASS__, 'help_text' ], 10, 3 );
+			//add_action( 'contextual_help', [ __CLASS__, 'help_text' ], 10, 3 );
 			add_filter( 'enter_title_here', [ __CLASS__, 'title' ] );
 
 			if ( class_exists( 'WPP_Tax_Term_Img' ) ) {

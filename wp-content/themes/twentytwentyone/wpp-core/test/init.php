@@ -8,3 +8,4 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once 'tax-post-type.php';
+require_once 'assets.php';

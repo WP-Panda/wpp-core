@@ -39,7 +39,8 @@ endif;
 
 $array = [
 	'components/init',
-	'test/tax-post-type'
+	'test/init',
+	'for-themes/setting-filters'
 ];
 
 wpp_require( $array, __DIR__ );
