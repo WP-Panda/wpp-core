@@ -23,17 +23,19 @@ class Wpp_Assets {
 		/*
 		 пример элемента массива
 		'id' => [
+		'logged' => 'all', 'login', 'not_login'
 			//'url'        => '', //ссылка
 			'screen'     => '', //экран
 			'too'        => '', // front admin
 			//'version'    => '', //версия
 			'has_min'    => '', //есть ли минимифицированная версия
 			//'depth'      => [],
-			'register'   => false, // вызов или регистрация
-			'footer'     => true, //футер или хэдер
-			'attributes' => [
+			//'register'   => false, // вызов или регистрация
+			//'footer'     => true, //футер или хэдер
+			//'attributes' => [
 				'' => ''
-			]
+			],
+		//'localize'=[]
 		]; */
 		return apply_filters( 'wpp_scripts', self::$scripts );
 	}
@@ -46,6 +48,7 @@ class Wpp_Assets {
 		/*
 		 пример элемента массива
 		'id' => [
+
 			//'url'        => '', //ссылка
 			'screen'     => '', //экран
 			'too'        => '', // front admin
@@ -72,6 +75,21 @@ class Wpp_Assets {
 		if ( ! empty( $scripts_array ) ) {
 			foreach ( $scripts_array as $script_key => $script_data ) {
 				if ( ! empty( $script_data['url'] ) ) {
+
+					//если только для зареганных или для не зареганных
+					if ( ! empty( $script_data['logged'] ) ) {
+						if ( ( 'login' === $script_data['logged'] && ! is_user_logged_in() ) || ( 'not_login' === $script_data['logged'] && is_user_logged_in() ) ) {
+							continue;
+						}
+					}
+
+					//если только для определнных экранов
+					if ( ! empty( $script_data['screen'] ) ) {
+						if ( ! call_user_func( 'is_' . $script_data['screen'] ) ) {
+							continue;
+						}
+					}
+
 					//регистрация скрипта
 					wp_register_script( $script_key,
 						sanitize_url( $script_data['url'] ),
@@ -90,6 +108,21 @@ class Wpp_Assets {
 						foreach ( $script_data['attributes'] as $key => $val ) {
 							wp_script_add_data( $script_key, self::$preff . $key, $val );
 						}
+					}
+
+					//
+					if ( ! empty( $script_data['localize'] ) && is_array( $script_data['localize'] ) ) {
+						if ( empty( $script_data['localize']['ajax_url'] ) ) {
+							$script_data['localize']['ajax_url'] = admin_url( 'admin-ajax.php' );
+						}
+
+						if ( empty( $script_data['localize']['security'] ) ) {
+							$script_data['localize']['security'] = wp_create_nonce( $script_key );
+						}
+
+						wp_localize_script( $script_key,
+							self::convert_id_to_js_key( $script_key ),
+							$script_data['localize'] );
 					}
 				}
 			}
@@ -133,9 +166,9 @@ class Wpp_Assets {
 	 * @param $media
 	 * @param $isStyle
 	 *
+	 * @return mixed|string
 	 * @see https://gist.github.com/WP-Panda/847599069b17c9a3778cee4fa010a359
 	 *
-	 * @return mixed|string
 	 */
 	private static function custom_atts( $tag, $handle, $src, $media, $isStyle ) {
 		$extraAttrs = [];
@@ -189,6 +222,18 @@ class Wpp_Assets {
 	public static function style_loader_tag( $tag, $handle, $src, $media ) {
 		return self::custom_atts( $tag, $handle, $src, $media, true );
 	}
-}
 
-Wpp_Assets::init();
+	/**
+	 * Преобразование ключа в ID
+	 *
+	 * @param $string
+	 *
+	 * @return array|string|string[]
+	 */
+	private static function convert_id_to_js_key( $string ) {
+		$pre_str = ucwords( str_replace( [ '-', '_' ], ' ', $string ) );
+		$string  = str_replace( ' ', '', $pre_str );
+
+		return $string;
+	}
+}

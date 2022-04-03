@@ -18,7 +18,6 @@ defined( 'ABSPATH' ) || exit;
  * @return array|bool
  */
 function wpp_empty_array_clear( $array ) {
-
 	if ( ! is_array( $array ) ) {
 		return false;
 	}
@@ -30,7 +29,7 @@ function wpp_empty_array_clear( $array ) {
 				unset( $array[ $k ] );
 			}
 		} else {
-			if ( $v === '' || $v === null || $v == false ) {
+			if ( '' === $v || null === $v || false === $v ) {
 				unset( $array[ $k ] );
 			}
 		}

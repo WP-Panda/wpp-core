@@ -11,4 +11,4 @@ $array = [
 	'helpers-img',
 ];
 
-wpp_require( $array, __DIR__ );
+wpp()->require( $array, __DIR__ );

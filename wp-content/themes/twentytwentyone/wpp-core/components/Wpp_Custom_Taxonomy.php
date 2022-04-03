@@ -435,5 +435,3 @@ if ( ! class_exists( 'Wpp_Custom_Taxonomy' ) ) :
 	}
 
 endif;
-
-Wpp_Custom_Taxonomy::init();

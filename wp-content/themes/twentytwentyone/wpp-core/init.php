@@ -7,19 +7,113 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WPP_CORE_DIR', __DIR__ . '/' );
-define('WPP_CORE_URL', get_stylesheet_directory_uri() . '/wpp-core/');
 
-/**
- * Подключение файлов
- *
- * @param $files
- * @param $dir
- *
- * @return false|void
- */
-if ( ! function_exists( 'wpp_require' ) ) :
-	function wpp_require( $files = [], $dir = null ) {
+class WppCore {
+
+	/**
+	 * WppCore version.
+	 *
+	 * @var string
+	 */
+	public $version = '0.8.5';
+
+	/**
+	 * The single instance of the class.
+	 *
+	 * @var WppCore
+	 */
+	protected static $_instance = null;
+
+
+	/**
+	 * Main WooCommerce Instance.
+	 *
+	 * Ensures only one instance of WooCommerce is loaded or can be loaded.
+	 *
+	 * @return WppCore - Main instance.
+	 * @see WPP()
+	 * @since 2.1
+	 * @static
+	 */
+	public static function instance() {
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+
+		return self::$_instance;
+	}
+
+	/**
+	 * WppCore Constructor.
+	 */
+	public function __construct() {
+		$this->define_constants();
+		$this->includes();
+		$this->start_classes();
+	}
+
+	/**
+	 * Define WPP Constants.
+	 */
+	private function define_constants() {
+		$this->define( 'WPP_CORE_VERSION', $this->version );
+		$this->define( 'WPP_CORE_DIR', __DIR__ . '/' );
+		$this->define( 'WPP_CORE_URL', get_stylesheet_directory_uri() . '/wpp-core/' );
+	}
+
+	/**
+	 * Define constant if not already set.
+	 *
+	 * @param string $name Constant name.
+	 * @param string|bool $value Constant value.
+	 */
+	private function define( $name, $value ) {
+		if ( ! defined( $name ) ) {
+			define( $name, $value );
+		}
+	}
+
+	/**
+	 * Include required core files used in admin and on the frontend.
+	 */
+	public function includes() {
+
+		$array = [
+			//сlasses
+			'components/WPP_Tax_Term_Img',
+			'components/Wpp_Custom_Taxonomy',
+			'components/Wpp_Assets',
+
+			//helpers
+			'components/helpers/init',
+
+			//setting
+			'for-themes/setting-filters',
+
+			//test
+			'test/init',
+		];
+
+
+		$this->require( $array, __DIR__ );
+	}
+
+	public function start_classes(){
+
+		WPP_Tax_Term_Img::init();
+		Wpp_Custom_Taxonomy::init();
+		Wpp_Assets::init();
+	}
+
+	/**
+	 * Подключение
+	 * @param $files
+	 * @param $dir
+	 *
+	 * @return false|void
+	 */
+	public function require( $files = [], $dir = null ) {
+
 		if ( empty( $files ) ) {
 			return false;
 		}
@@ -35,12 +129,18 @@ if ( ! function_exists( 'wpp_require' ) ) :
 
 		endforeach;
 	}
-endif;
 
-$array = [
-	'components/init',
-	'test/init',
-	'for-themes/setting-filters'
-];
 
-wpp_require( $array, __DIR__ );
+}
+
+/** Returns the main instance of WC.
+ *
+ * @return WppCore
+ * @since  2.1
+ */
+function WPP() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
+	return WppCore::instance();
+}
+
+// Global for backwards compatibility.
+$GLOBALS['wpp'] = WPP();

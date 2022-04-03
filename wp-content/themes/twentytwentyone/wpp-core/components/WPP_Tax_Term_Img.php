@@ -256,8 +256,6 @@ class WPP_Tax_Term_Img {
 	}
 }
 
-WPP_Tax_Term_Img::init();
-
 
 function wpp_term_img( $id ) {
 	$thumbnail_id = get_term_meta( $id, WPP_Tax_Term_Img::$field, true );

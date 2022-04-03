@@ -42,18 +42,8 @@ if ( ! function_exists( 'wpp_sanitize_link' ) ):
 	 * @return string
 	 */
 
-	function wpp_sanitize_link( $link = null ) {
-
-		if ( ! empty( $link ) ) {
-			$link = esc_url( $link );
-		}
-
-		if ( empty( $link ) ) {
-			$link = 'javascript:void(0);';
-		}
-
-		return $link;
-
+	function wpp_sanitize_link( $link = null, $default = 'javascript:void(0);' ) {
+		return ! empty( $link ) ? esc_url( $link ) : $default;
 	}
 
 endif;
@@ -63,7 +53,6 @@ if ( ! function_exists( 'wpp_email_link' ) ) :
 	 * Создание и проверка ссылки на элекктропочту
 	 */
 	function wpp_email_link( $mail ) {
-
 		$error_args = [
 			__( 'Email is Empty' ),
 			__( 'Email is Not Valid' )
@@ -89,8 +78,6 @@ if ( ! function_exists( 'wpp_email_link' ) ) :
 		}
 
 		return apply_filters( 'wpp_email_link_filter', sprintf( '<a href="mailto:%1$s" title="">%1$s</a>', $mail ) );
-
-
 	}
 
 endif;
@@ -101,7 +88,6 @@ if ( ! function_exists( 'wpp_phone_link' ) ) :
 	 * Генерация ссылки номера телефона
 	 */
 	function wpp_phone_link( $phone ) {
-
 		if ( empty( $phone ) ) {
 			return '<p>Phone is Empty</p>';
 		}
@@ -110,9 +96,8 @@ if ( ! function_exists( 'wpp_phone_link' ) ) :
 			return '<p>Phone is Not Valid</p>';
 		}
 
-		return apply_filters( 'wpp_phone_link_filter', sprintf( '<a href="tel:%1$s" title=""><b>%2$s</b></a>', wpp_only_numbers( $phone ), $phone ) );
-
-
+		return apply_filters( 'wpp_phone_link_filter',
+			sprintf( '<a href="tel:%1$s" title=""><b>%2$s</b></a>', wpp_only_numbers( $phone ), $phone ) );
 	}
 
 endif;

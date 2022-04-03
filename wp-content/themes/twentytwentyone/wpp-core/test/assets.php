@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 function wpp_assets_test( $array ) {
 	$array['tester_js'] = [
 		'url'        => 'http://yponton.rus/wp-includes/js/jquery/ui/mouse.js', //ссылка
-		'screen'     => '', //экран
+		'screen'     => 'single', //экран
 		'too'        => '', // front admin
 		'version'    => '888', //версия
 		'has_min'    => '', //есть ли минимифицированная версия
@@ -23,7 +23,11 @@ function wpp_assets_test( $array ) {
 			'goglgog'     => 'dddddddddddddddddd',
 			'dfdfgdufgnd' => 'fffffffffff'
 		],
-		'defer'     => true
+		'defer'     => true,
+		'localize'=>[
+			'str_1' => 'vvvvvvvvvvvvv',
+			'str_2' => 'thththt',
+		]
 	];
 
 	return $array;
