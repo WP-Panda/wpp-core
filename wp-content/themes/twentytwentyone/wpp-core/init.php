@@ -79,10 +79,14 @@ class WppCore {
 	public function includes() {
 
 		$array = [
+			//core functions
+			'components/core-functions/for-templates',
+
 			//сlasses
 			'components/WPP_Tax_Term_Img',
 			'components/Wpp_Custom_Taxonomy',
 			'components/Wpp_Assets',
+			'components/Wpp_Endpoints',
 
 			//helpers
 			'components/helpers/init',
@@ -103,6 +107,7 @@ class WppCore {
 		WPP_Tax_Term_Img::init();
 		Wpp_Custom_Taxonomy::init();
 		Wpp_Assets::init();
+		new Wpp_Endpoints();
 	}
 
 	/**
