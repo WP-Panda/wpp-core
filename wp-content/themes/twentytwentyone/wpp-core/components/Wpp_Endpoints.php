@@ -35,10 +35,10 @@ class Wpp_Endpoints {
 	function do_rewrite() {
 		$args = self::endpoint_settings();
 		foreach ( $args as $one_point => $val ) {
-
 			// Правило перезаписи
-			add_rewrite_rule( sprintf( '^(%s)/([^/]*)/([^/]*)/?', $one_point ), sprintf( 'index.php?%s=$matches[1]', $one_point ), 'top' );
-
+			add_rewrite_rule( sprintf( '^(%s)/([^/]*)/([^/]*)/?', $one_point ),
+				sprintf( 'index.php?%s=$matches[1]', $one_point ),
+				'top' );
 		}
 	}
 
@@ -77,7 +77,7 @@ class Wpp_Endpoints {
 		'models'      => array (
 		'title'    => __( 'Item Title' ),
 		'icons'    => '',
-		'template' => '/templates/pages/list-models.php',
+		'template' => '/templates/pages/list-models',
 		'order'    => 5,
 		'caps'     => 'manage_options',
 		'places'   => EP_ROOT
@@ -104,26 +104,42 @@ class Wpp_Endpoints {
 		$args = self::endpoint_settings();
 
 		if ( get_query_var( $point, false ) !== false ) {
-			$page = get_query_var( $point );
 
-			if ( ! is_user_logged_in() && ( ( ! empty( $args[ $point ]['child'][ $page ]['registred'] ) && $args[ $point ]['child'][ $page ]['registred'] === true ) || ( ! empty( $args[ $point ]['registred'] ) && $args[ $point ]['registred'] === true ) ) ) {
-				return apply_filters( 'wpp_load_not_logged_template_part',
-					wpp_fr()->plugin_path() . '/wpp-extention/wpp-account/templates/not-logged-user.php' );
-			} else {
-				$tenplate_change = ! empty( $args[ $point ]['child'][ $page ]['template'] ) ? $args[ $point ]['child'][ $page ]['template'] : ( ! empty( $args[ $point ]['template'] ) ? $args[ $point ]['template'] : null );
+			//отдать 404 когда запрещен доступ
+			if ( ! empty( $args[ $point ]['for'] ) && ( 'logged' === $args[ $point ]['for'] || 'not_logged' === $args[ $point ]['for'] ) ) {
+				if ( ( is_user_logged_in() && 'not_logged' === $args[ $point ]['for'] ) || ( ! is_user_logged_in() && 'logged' === $args[ $point ]['for'] ) ) {
+					//фильтр что бы не отдавать не 404
+					$flag = apply_filters( 'wpp_end_point_404_send', true );
 
-				$template_name = ! empty( $tenplate_change ) ? $tenplate_change : wpp_fr()->plugin_path() . '/wpp-extention/wpp-account/templates/main-template.php';
+					$template = get_query_template( '404' );
+					//фильр для замены 404 шаблока точки
+					$template = apply_filters( "wpp_end_point_404_template", $template );
 
-				$newTemplate = locate_template( [ basename( $template_name ) . PHP_EOL ] );
+					if ( true === $flag ) {
+						global $wp_query;
+						$wp_query->set_404();
+						status_header( 404 );
+						nocache_headers();
 
-				if ( '' != $newTemplate ) {
-					return $newTemplate;
-				}
-
-				if ( file_exists( $template_name ) ) {
-					return $template_name;
+						return $template;
+					}
 				}
 			}
+
+
+			if ( ! empty( $args[ $point ]['template'] ) ) {
+				$template = wpp_get_template_part( $args[ $point ]['template'], [], true );
+			}
+
+			if ( empty( $template ) ) {
+				$template = WPP_CORE_DIR . 'components/templates/default-endpoint.php';
+
+				//фильтр для амены шаблона по умолчанию
+				$template = apply_filters( "wpp_end_point_default_template", $template );
+			}
+
+			//фильтр для конкретной конечной точки
+			$template = apply_filters( "wpp_end_{$point}_point_template", $template );
 		}
 
 		return $template;

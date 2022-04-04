@@ -20,7 +20,7 @@ if ( ! function_exists( 'wpp_image_placeholder' ) ) :
 			$placeholder_image = get_option( 'wpp_placeholder_image', 0 );
 
 			if ( empty( $placeholder_image ) ) {
-				$image[0] = WPP_CORE_URL . 'assets/img/placeholder.jpg';
+				$image[0] = WPP_CORE_URL . 'components/assets/img/placeholder.jpg';
 			} else {
 				$image_opt = wp_get_attachment_image_src( $placeholder_image );
 

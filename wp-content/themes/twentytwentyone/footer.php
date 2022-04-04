@@ -17,7 +17,7 @@
 </div><!-- #content -->
 
 <?php
- wpp_get_template_part( 'template-parts/test-template', ['data'=>'gdgdg', 'vata'=>'ffff'] );
+//wpp_get_template_part( 'template-parts/test-template', ['data'=>'gdgdg', 'vata'=>'ffff'] );
 
 get_template_part( 'template-parts/footer/footer-widgets' ); ?>
 

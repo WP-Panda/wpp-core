@@ -26,7 +26,7 @@ class WPP_Tax_Term_Img {
 
 	public static function actions() {
 		$tax_names = apply_filters( 'wpp_tax_imgs_targets', [] );
-		wpp_log_data( $tax_names, 'im' );
+
 		if ( ! empty( $tax_names ) ) :
 			foreach ( $tax_names as $tax_name ) :
 
