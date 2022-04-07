@@ -2,7 +2,7 @@
 
 function wpp_endpoint_test( $endpoints ) {
 	/*
-			 * Пример массива
+	* Пример массива
 	 */
 
 	$endpoints['wpp_test'] = [

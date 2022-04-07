@@ -1,0 +1,1 @@
+<input type="%1$s" id="%2$s"%3$s name="%2$s"%4$s%5$s%6$s%7$s>

@@ -83,6 +83,8 @@ class WppCore {
 			'components/core-functions/for-templates',
 
 			//сlasses
+			'components/wpp-forms/Wpp_Forms',
+
 			'components/WPP_Tax_Term_Img',
 			'components/Wpp_Custom_Taxonomy',
 			'components/Wpp_Assets',
